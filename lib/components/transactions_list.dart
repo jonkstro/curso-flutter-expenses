@@ -12,7 +12,7 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 350,
+      height: 500,
       child: transactions.isEmpty
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -36,16 +36,16 @@ class TransactionList extends StatelessWidget {
                   height: 50,
                 ),
                 SizedBox(
-                  height: 100,
+                  height: 250,
                   width: 100,
-                  // child: Image.asset(
-                  //   'assets/images/waiting.png',
-                  //   fit: BoxFit.cover,
-                  // ),
-                  child: CircularProgressIndicator(
-                    strokeWidth: 5,
-                    strokeAlign: 1,
+                  child: Image.asset(
+                    'assets/images/waiting.png',
+                    fit: BoxFit.cover,
                   ),
+                  // child: CircularProgressIndicator(
+                  //   strokeWidth: 5,
+                  //   strokeAlign: 1,
+                  // ),
                 )
               ],
             )

@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:expenses/components/chart.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expenses/components/transactions_form.dart';
@@ -67,25 +68,33 @@ class _MyHomePageState extends State<MyHomePage> {
   /// Aqui vamos criar alguns objetos pra adicionar depois
   // ignore: unused_field
   final List<Transaction> _transactions = [
-    // Transaction(
-    //   id: 't1',
-    //   title: 'Novo tenis de corrida',
-    //   value: 310.76,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't2',
-    //   title: 'Conta de luz',
-    //   value: 211,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't3',
-    //   title: 'Conta de água',
-    //   value: 200,
-    //   date: DateTime.now(),
-    // ),
+    Transaction(
+      id: 't1',
+      title: 'Conta antiga',
+      value: 400.76,
+      date: DateTime.now().subtract(Duration(days: 33)),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Conta de luz',
+      value: 211,
+      date: DateTime.now().subtract(Duration(days: 2)),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'Conta de água',
+      value: 200,
+      date: DateTime.now().subtract(Duration(days: 0)),
+    ),
   ];
+
+  // Pegar as transações somente da semana - ultimos 7 dias
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((element) {
+      // Se a transação for recente é verdadeiro a função
+      return element.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
 
   // MÉTODO QUE VAI ADICIONAR AS TRANSAÇÕES
   void _addTransactions(String title, double value) {
@@ -137,10 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Card(
-              color: Colors.blue,
-              child: const Text('Gráfico'),
-            ),
+            // Chama o CHART passando as transações recentes
+            Chart(recentTransactions: _recentTransactions),
             TransactionList(transactions: _transactions),
           ],
         ),
