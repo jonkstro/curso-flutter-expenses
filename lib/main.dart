@@ -3,11 +3,17 @@
 import 'dart:math';
 
 import 'package:expenses/components/chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expenses/components/transactions_form.dart';
 import 'package:expenses/components/transactions_list.dart';
 import 'package:expenses/models/transaction.dart';
+import 'package:intl/date_symbol_data_local.dart';
+/**
+ * Aqui é pra mudar o DATEPICKER para pt br.
+ */
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main(List<String> args) {
   runApp(const ExpenssesApp());
@@ -21,6 +27,16 @@ class ExpenssesApp extends StatelessWidget {
     // VARIAVEL QUE VAI SERVIR PRA DEFINIR OS TEMAS DE CORES
     final ThemeData tema = ThemeData();
     return MaterialApp(
+      /**
+       * Aqui é pra mudar o DATEPICKER para pt br.
+       */
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('pt', 'BR')
+      ], // Adicione o locale desejado
       home: MyHomePage(),
       // DEFINIR OS TEMAS DO APLICATIVO:
       theme: tema.copyWith(
@@ -43,7 +59,7 @@ class ExpenssesApp extends StatelessWidget {
           ),
           bodySmall: TextStyle(
             fontFamily: 'QuickSand',
-            fontSize: 16,
+            fontSize: 12,
             fontWeight: FontWeight.normal,
             color: Colors.grey[600],
           ),
@@ -65,28 +81,36 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  /**
+   * MÉTODO QUE FOI CRIADO SÓ PRA PODER CARREGAR NO APP AS DATAS PT_BR
+   */
+  get _localeDateTime {
+    // Inicialize o sistema de localização. Senão vai pegar tudo em ingles
+    initializeDateFormatting('pt_BR', null);
+  }
+
   /// Aqui vamos criar alguns objetos pra adicionar depois
   // ignore: unused_field
-  final List<Transaction> _transactions = [
-    Transaction(
-      id: 't1',
-      title: 'Conta antiga',
-      value: 400.76,
-      date: DateTime.now().subtract(Duration(days: 33)),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de luz',
-      value: 211,
-      date: DateTime.now().subtract(Duration(days: 2)),
-    ),
-    Transaction(
-      id: 't3',
-      title: 'Conta de água',
-      value: 200,
-      date: DateTime.now().subtract(Duration(days: 0)),
-    ),
-  ];
+  final List<Transaction> _transactions = [];
+  //   Transaction(
+  //     id: 't1',
+  //     title: 'Conta antiga',
+  //     value: 400.76,
+  //     date: DateTime.now().subtract(Duration(days: 33)),
+  //   ),
+  //   Transaction(
+  //     id: 't2',
+  //     title: 'Conta de luz',
+  //     value: 211,
+  //     date: DateTime.now().subtract(Duration(days: 2)),
+  //   ),
+  //   Transaction(
+  //     id: 't3',
+  //     title: 'Conta de água',
+  //     value: 200,
+  //     date: DateTime.now().subtract(Duration(days: 0)),
+  //   ),
+  // ];
 
   // Pegar as transações somente da semana - ultimos 7 dias
   List<Transaction> get _recentTransactions {
@@ -97,12 +121,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // MÉTODO QUE VAI ADICIONAR AS TRANSAÇÕES
-  void _addTransactions(String title, double value) {
+  _addTransactions(String title, double value, DateTime date) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
       title: title,
       value: value,
-      date: DateTime.timestamp(),
+      date: date,
     );
 
     /// ALTERAR O ESTADO DA LISTA. POR ISSO PRECISAMOS USAR UM STATEFULL WIDGET
@@ -114,16 +138,43 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.of(context).pop();
   }
 
+  /// Vai apagar a transação com id igual o id passado
+  _removeTransactions(String id) {
+    setState(() {
+      _transactions.removeWhere((element) {
+        return element.id == id;
+      });
+    });
+  }
+
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
-        context: context,
-        builder: (_) {
-          return TransactionForm(_addTransactions);
-        });
+      context: context,
+      builder: (_) {
+        return OrientationBuilder(
+          builder: (context, orientation) {
+            double alturaTela = MediaQuery.of(context).size.height;
+
+            /// SE TIVER DEITADO TEM 80% DA TELA, SENÃO TEM 50%
+            double pctTela = orientation == Orientation.portrait ? 0.5 : 0.8;
+            return SizedBox(
+              height: alturaTela * pctTela, // 80% da tela
+              child: TransactionForm(_addTransactions),
+            );
+          },
+        );
+      },
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // AQUI EU VOU DIZER QUE MINHAS DATAS SÃO TUDO PT_BR !!!!!!!!!!!!!!!!!!!
+    _localeDateTime;
     return Scaffold(
       appBar: AppBar(
         title: Text('Despesas pessoais'),
@@ -148,7 +199,8 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             // Chama o CHART passando as transações recentes
             Chart(recentTransactions: _recentTransactions),
-            TransactionList(transactions: _transactions),
+            TransactionList(
+                transactions: _transactions, onRemove: _removeTransactions),
           ],
         ),
       ),

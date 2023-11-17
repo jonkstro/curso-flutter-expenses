@@ -21,8 +21,11 @@ class ChartBar extends StatelessWidget {
       children: <Widget>[
         // VAI REDUZIR O TAMANHO DO TEXTO PARA NÃO EMPURRAR O RESTO PRA BAIXO
         // POR ISSO USAMOS FITTEDBOX
-        FittedBox(
-          child: Text("R\$ ${value.toStringAsFixed(2)}"),
+        Container(
+          height: 20,
+          child: FittedBox(
+            child: Text("R\$ ${value.toStringAsFixed(2)}"),
+          ),
         ),
         SizedBox(height: 5),
         Container(
@@ -59,7 +62,12 @@ class ChartBar extends StatelessWidget {
           ),
         ),
         SizedBox(height: 5),
-        Text(label),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
+          ),
+        ),
       ],
     );
   }

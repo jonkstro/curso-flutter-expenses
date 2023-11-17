@@ -30,7 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.17.0
+  intl: ^0.18.1
+  flutter_localizations:
+    sdk: flutter
   # keyboard_visibility: any
 
 
@@ -43,6 +45,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

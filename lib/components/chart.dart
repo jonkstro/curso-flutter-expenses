@@ -2,7 +2,6 @@
 
 import 'package:expenses/components/chart_bar.dart';
 import 'package:expenses/models/transaction.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +18,6 @@ class Chart extends StatelessWidget {
       // Diminuir index dias. (1 a 7)
       final weekDay = DateTime.now().subtract(Duration(days: index));
 
-      // Inicialize o sistema de localização. Senão vai pegar tudo em ingles
-      initializeDateFormatting('pt_BR', null);
       // De acordo com o dia, vai pegar a primeira letra. Ex.: Segunda-Feira -> 'S'
       String letraDia = DateFormat.E('pt_BR').format(weekDay).toUpperCase();
 
@@ -42,7 +39,9 @@ class Chart extends StatelessWidget {
       // print(letraDia);
       // print(totalSum);
       return {'day': letraDia, 'value': totalSum};
-    });
+    })
+        .reversed // Vai inverter a lista, pra começar o dia da semana da direita
+        .toList();
   }
 
   // GETTER QUE VAI PEGAR O VALOR TOTAL DA SEMANA PRA DEPOIS CALCULAR A PORCENTAGEM
@@ -56,24 +55,28 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 6,
-      margin: EdgeInsets.all(20),
+      elevation: 5,
+      margin: EdgeInsets.all(10),
       // Pra evitar de quebrar por overflowed pixels
       child: Padding(
-        padding: const EdgeInsets.all(6.0),
+        padding: const EdgeInsets.all(1.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: groupedTransactions.map((tr) {
             // AQUI ELE DIVIDE OS ELEMENTOS PRA NÃO QUEBRAR A TELA
-            return Flexible(
-              fit: FlexFit.tight,
+            // Poderia usar tbm o EXPANDED que é igual o Flexible com tight setado
+            // return Flexible(
+            // fit: FlexFit.tight,
+            return Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(1.5),
                 child: ChartBar(
                   // Ele tá vindo OBJECT, então tem que castear pro valor certo
                   label: (tr['day'] as String),
                   value: (tr['value'] as double),
-                  percentage: (tr['value'] as double) / _weekTotalValue,
+                  percentage: _weekTotalValue == 0
+                      ? 0
+                      : (tr['value'] as double) / _weekTotalValue,
                 ),
               ),
             );
