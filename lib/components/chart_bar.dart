@@ -17,58 +17,72 @@ class ChartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        // VAI REDUZIR O TAMANHO DO TEXTO PARA NÃO EMPURRAR O RESTO PRA BAIXO
-        // POR ISSO USAMOS FITTEDBOX
-        Container(
-          height: 20,
-          child: FittedBox(
-            child: Text("R\$ ${value.toStringAsFixed(2)}"),
-          ),
-        ),
-        SizedBox(height: 5),
-        Container(
-          height: 60,
-          width: 15,
-          child: Stack(
-            // Começar de baixo pra cima, já que vem por padrão de cima pra baixo
-            alignment: Alignment.bottomCenter,
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                    color: Color.fromRGBO(220, 220, 220, 1),
-                    // Metade do tamanho deixa circular
-                    borderRadius: BorderRadius.circular(5)),
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        return Column(
+          children: <Widget>[
+            // VAI REDUZIR O TAMANHO DO TEXTO PARA NÃO EMPURRAR O RESTO PRA BAIXO
+            // POR ISSO USAMOS FITTEDBOX
+            SizedBox(
+              // RESPONSIVIDADE DO TAMANHO PRA OCUPAR 100%
+
+              height: constraints.maxHeight * 0.15,
+              child: FittedBox(
+                child: Text("R\$ ${value.toStringAsFixed(2)}"),
               ),
-              FractionallySizedBox(
-                heightFactor: percentage,
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                      color: Theme.of(context).colorScheme.primary,
-                      // Metade do tamanho deixa circular
-                      borderRadius: BorderRadius.circular(5)),
+            ),
+            // RESPONSIVIDADE DO TAMANHO PRA OCUPAR 100%
+            SizedBox(height: constraints.maxHeight * 0.05),
+            SizedBox(
+              // RESPONSIVIDADE DO TAMANHO PRA OCUPAR 100%
+              height: constraints.maxHeight * 0.6,
+              width: 15,
+              child: Stack(
+                // Começar de baixo pra cima, já que vem por padrão de cima pra baixo
+                alignment: Alignment.bottomCenter,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                        color: Color.fromRGBO(220, 220, 220, 1),
+                        // Metade do tamanho deixa circular
+                        borderRadius: BorderRadius.circular(5)),
+                  ),
+                  FractionallySizedBox(
+                    heightFactor: percentage,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                          color: Theme.of(context).colorScheme.primary,
+                          // Metade do tamanho deixa circular
+                          borderRadius: BorderRadius.circular(5)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: constraints.maxHeight * 0.05),
+            SizedBox(
+              // RESPONSIVIDADE DO TAMANHO PRA OCUPAR 100%
+              height: constraints.maxHeight * 0.15,
+              child: FittedBox(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
+                  ),
                 ),
               ),
-            ],
-          ),
-        ),
-        SizedBox(height: 5),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
-          ),
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

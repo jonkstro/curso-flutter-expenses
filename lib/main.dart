@@ -3,12 +3,12 @@
 import 'dart:math';
 
 import 'package:expenses/components/chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expenses/components/transactions_form.dart';
 import 'package:expenses/components/transactions_list.dart';
 import 'package:expenses/models/transaction.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 /**
  * Aqui é pra mudar o DATEPICKER para pt br.
@@ -26,6 +26,7 @@ class ExpenssesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // VARIAVEL QUE VAI SERVIR PRA DEFINIR OS TEMAS DE CORES
     final ThemeData tema = ThemeData();
+
     return MaterialApp(
       /**
        * Aqui é pra mudar o DATEPICKER para pt br.
@@ -47,19 +48,20 @@ class ExpenssesApp extends StatelessWidget {
         textTheme: tema.textTheme.copyWith(
           headlineMedium: TextStyle(
             fontFamily: 'QuickSand',
-            fontSize: 20,
+            // Acessibilidade e responsividade:
+            fontSize: 20 * MediaQuery.of(context).textScaleFactor,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
           bodyMedium: TextStyle(
             fontFamily: 'QuickSand',
-            fontSize: 16,
+            fontSize: 16 * MediaQuery.of(context).textScaleFactor,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
           bodySmall: TextStyle(
             fontFamily: 'QuickSand',
-            fontSize: 12,
+            fontSize: 12 * MediaQuery.of(context).textScaleFactor,
             fontWeight: FontWeight.normal,
             color: Colors.grey[600],
           ),
@@ -67,7 +69,7 @@ class ExpenssesApp extends StatelessWidget {
         appBarTheme: AppBarTheme(
           titleTextStyle: TextStyle(
               fontFamily: 'QuickSand',
-              fontSize: 20,
+              fontSize: 20 * MediaQuery.of(context).textScaleFactor,
               fontWeight: FontWeight.bold),
         ),
       ),
@@ -81,9 +83,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  /**
-   * MÉTODO QUE FOI CRIADO SÓ PRA PODER CARREGAR NO APP AS DATAS PT_BR
-   */
+  /// MÉTODO QUE FOI CRIADO SÓ PRA PODER CARREGAR NO APP AS DATAS PT_BR
   get _localeDateTime {
     // Inicialize o sistema de localização. Senão vai pegar tudo em ingles
     initializeDateFormatting('pt_BR', null);
@@ -91,26 +91,83 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /// Aqui vamos criar alguns objetos pra adicionar depois
   // ignore: unused_field
-  final List<Transaction> _transactions = [];
-  //   Transaction(
-  //     id: 't1',
-  //     title: 'Conta antiga',
-  //     value: 400.76,
-  //     date: DateTime.now().subtract(Duration(days: 33)),
-  //   ),
-  //   Transaction(
-  //     id: 't2',
-  //     title: 'Conta de luz',
-  //     value: 211,
-  //     date: DateTime.now().subtract(Duration(days: 2)),
-  //   ),
-  //   Transaction(
-  //     id: 't3',
-  //     title: 'Conta de água',
-  //     value: 200,
-  //     date: DateTime.now().subtract(Duration(days: 0)),
-  //   ),
-  // ];
+  final List<Transaction> _transactions = [
+    Transaction(
+      id: 't1',
+      title: 'Conta antiga',
+      value: 400.76,
+      date: DateTime.now().subtract(Duration(days: 33)),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Conta de luz',
+      value: 211,
+      date: DateTime.now().subtract(Duration(days: 2)),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'Conta de água',
+      value: 200,
+      date: DateTime.now().subtract(Duration(days: 0)),
+    ),
+    Transaction(
+      id: 't1',
+      title: 'Conta antiga',
+      value: 400.76,
+      date: DateTime.now().subtract(Duration(days: 33)),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Conta de luz',
+      value: 211,
+      date: DateTime.now().subtract(Duration(days: 2)),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'Conta de água',
+      value: 200,
+      date: DateTime.now().subtract(Duration(days: 0)),
+    ),
+    Transaction(
+      id: 't1',
+      title: 'Conta antiga',
+      value: 400.76,
+      date: DateTime.now().subtract(Duration(days: 33)),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Conta de luz',
+      value: 211,
+      date: DateTime.now().subtract(Duration(days: 2)),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'Conta de água',
+      value: 200,
+      date: DateTime.now().subtract(Duration(days: 0)),
+    ),
+    Transaction(
+      id: 't1',
+      title: 'Conta antiga',
+      value: 400.76,
+      date: DateTime.now().subtract(Duration(days: 33)),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Conta de luz',
+      value: 211,
+      date: DateTime.now().subtract(Duration(days: 2)),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'ultima Conta de água',
+      value: 200,
+      date: DateTime.now().subtract(Duration(days: 0)),
+    ),
+  ];
+
+  // Mostrar o gráfico ou não
+  bool _showChart = false;
 
   // Pegar as transações somente da semana - ultimos 7 dias
   List<Transaction> get _recentTransactions {
@@ -148,12 +205,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _openTransactionFormModal(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     showModalBottomSheet(
       context: context,
       builder: (_) {
         return OrientationBuilder(
           builder: (context, orientation) {
-            double alturaTela = MediaQuery.of(context).size.height;
+            double alturaTela = mediaQuery.size.height;
 
             /// SE TIVER DEITADO TEM 80% DA TELA, SENÃO TEM 50%
             double pctTela = orientation == Orientation.portrait ? 0.5 : 0.8;
@@ -173,16 +231,38 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     // AQUI EU VOU DIZER QUE MINHAS DATAS SÃO TUDO PT_BR !!!!!!!!!!!!!!!!!!!
     _localeDateTime;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Despesas pessoais'),
-        centerTitle: true,
-        // NÃO PRECISA MAIS POIS TÁ NO THEME NO primarySwatch
-        // backgroundColor: Color.fromARGB(255, 89, 4, 104),
-        actions: <Widget>[
-          IconButton(
+
+    // // Vou dizer aqui que não vou deixar a aplicação rodar pro lado.
+    // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    // Checar a orientação da aplicação
+    bool isLandscape = mediaQuery.orientation == Orientation.landscape;
+
+    // Configurar o appbar por fora pq tá dando problema nas alturas
+    final appBar = AppBar(
+      title: Text('Despesas pessoais'),
+      centerTitle: true,
+      // NÃO PRECISA MAIS POIS TÁ NO THEME NO primarySwatch
+      // backgroundColor: Color.fromARGB(255, 89, 4, 104),
+      actions: <Widget>[
+        if (isLandscape)
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, mediaQuery.size.width * .1, 0),
+            child: IconButton(
+              onPressed: () {
+                setState(() {
+                  _showChart = !_showChart;
+                });
+              },
+              icon: Icon(_showChart ? Icons.list : Icons.show_chart),
+            ),
+          ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 0, mediaQuery.size.width * .05, 0),
+          child: IconButton(
             onPressed: () {
               _openTransactionFormModal(context);
             },
@@ -190,17 +270,52 @@ class _MyHomePageState extends State<MyHomePage> {
               Icons.add_circle_outline,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
+    );
+
+    // A altura disponível é igual a altura toda - a altura do appbar e status bar do celular
+    final alturaDisponivel = mediaQuery.size.height -
+        appBar.preferredSize.height -
+        mediaQuery.padding.top;
+
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            // Chama o CHART passando as transações recentes
-            Chart(recentTransactions: _recentTransactions),
-            TransactionList(
-                transactions: _transactions, onRemove: _removeTransactions),
+            // if (isLandscape)
+            //   Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: <Widget>[
+            //       Text('EXIBIR GRÁFICO'),
+            //       Switch(
+            //           value: _showChart,
+            //           onChanged: (value) {
+            //             setState(() {
+            //               _showChart = value;
+            //             });
+            //           }),
+            //     ],
+            //   ),
+            // Só chama se tiver no switch ou não for landscape a orientação
+            if (_showChart || !isLandscape)
+              // Chama o CHART passando as transações recentes
+              SizedBox(
+                  height: alturaDisponivel * (isLandscape ? .75 : 0.3),
+                  child: Chart(
+                    recentTransactions: _recentTransactions,
+                  )),
+            // Só chama se tiver no switch ou não for landscape a orientação
+            if (!_showChart || !isLandscape)
+              SizedBox(
+                  height: alturaDisponivel * (isLandscape ? .9 : 0.7),
+                  child: TransactionList(
+                    transactions: _transactions,
+                    onRemove: _removeTransactions,
+                  )),
           ],
         ),
       ),
@@ -216,141 +331,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-
-
-
-/**
- * 
- * E outra coisa, será necessária uma mudança quando for utilizar as cores colocadas no tema. Na próxima aula, por exemplo, lá no arquivo “transaction_list.dart” em um trecho do códigos nós temos:
-
-color: Theme.of(context).primaryColor,
-Agora será assim:
-
-color: Theme.of(context).colorScheme.primary,
-Basicamente é isso galera. Bons estudos!
- * 
- * 
- * 
-import 'package:flutter/material.dart';
-import 'dart:math';
-import './components/transaction_form.dart';
-import './components/transaction_list.dart';
-import 'models/transaction.dart';
- 
-main() => runApp(ExpensesApp());
- 
-class ExpensesApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData tema = ThemeData();
- 
-    return MaterialApp(
-      home: MyHomePage(),
-      theme: tema.copyWith(
-        colorScheme: tema.colorScheme.copyWith(
-          primary: Colors.purple,
-          secondary: Colors.amber,
-        ),
-        textTheme: tema.textTheme.copyWith(
-          headline6: TextStyle(
-            fontFamily: 'OpenSans',
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        appBarTheme: AppBarTheme(
-          titleTextStyle: TextStyle(
-            fontFamily: 'OpenSans',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-}
- 
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
- 
-class _MyHomePageState extends State<MyHomePage> {
-  final _transactions = [
-    Transaction(
-      id: 't1',
-      title: 'Novo Tênis de Corrida',
-      value: 310.76,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de Luz',
-      value: 211.30,
-      date: DateTime.now(),
-    ),
-  ];
- 
-  _addTransaction(String title, double value) {
-    final newTransaction = Transaction(
-      id: Random().nextDouble().toString(),
-      title: title,
-      value: value,
-      date: DateTime.now(),
-    );
- 
-    setState(() {
-      _transactions.add(newTransaction);
-    });
- 
-    Navigator.of(context).pop();
-  }
- 
-  _openTransactionFormModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) {
-        return TransactionForm(_addTransaction);
-      },
-    );
-  }
- 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Despesas Pessoais'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _openTransactionFormModal(context),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text('Gráfico'),
-                elevation: 5,
-              ),
-            ),
-            TransactionList(_transactions),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _openTransactionFormModal(context),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-}
- */
