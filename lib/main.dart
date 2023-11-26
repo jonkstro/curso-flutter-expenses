@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
 
 import 'dart:math';
+import 'dart:io';
 
 import 'package:expenses/components/chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expenses/components/transactions_form.dart';
@@ -229,6 +231,18 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Widget _getIconButton(IconData icon, Function() fn) {
+    return Platform.isIOS
+        ? GestureDetector(
+            child: Icon(icon),
+            onTap: fn,
+          )
+        : IconButton(
+            icon: Icon(icon),
+            onPressed: fn,
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -241,47 +255,55 @@ class _MyHomePageState extends State<MyHomePage> {
     // Checar a orientação da aplicação
     bool isLandscape = mediaQuery.orientation == Orientation.landscape;
 
-    // Configurar o appbar por fora pq tá dando problema nas alturas
-    final appBar = AppBar(
-      title: Text('Despesas pessoais'),
-      centerTitle: true,
-      // NÃO PRECISA MAIS POIS TÁ NO THEME NO primarySwatch
-      // backgroundColor: Color.fromARGB(255, 89, 4, 104),
-      actions: <Widget>[
-        if (isLandscape)
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, mediaQuery.size.width * .1, 0),
-            child: IconButton(
-              onPressed: () {
-                setState(() {
-                  _showChart = !_showChart;
-                });
-              },
-              icon: Icon(_showChart ? Icons.list : Icons.show_chart),
-            ),
-          ),
+    final actions = <Widget>[
+      if (isLandscape)
         Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, mediaQuery.size.width * .05, 0),
-          child: IconButton(
-            onPressed: () {
-              _openTransactionFormModal(context);
+          padding: EdgeInsets.fromLTRB(0, 0, mediaQuery.size.width * .1, 0),
+          child: _getIconButton(
+            _showChart ? Icons.list : Icons.show_chart,
+            () {
+              setState(() {
+                _showChart = !_showChart;
+              });
             },
-            icon: Icon(
-              Icons.add_circle_outline,
-            ),
           ),
         ),
-      ],
-    );
+      Padding(
+        padding: EdgeInsets.fromLTRB(0, 0, mediaQuery.size.width * .05, 0),
+        child: _getIconButton(
+          Platform.isIOS ? CupertinoIcons.add : Icons.add,
+          () {
+            _openTransactionFormModal(context);
+          },
+        ),
+      ),
+    ];
+
+    // Configurar o appbar por fora pq tá dando problema nas alturas
+    final dynamic appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text('Despesas pessoais'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: actions,
+            ),
+          )
+        : AppBar(
+            title: Text('Despesas pessoais'),
+            centerTitle: true,
+            // NÃO PRECISA MAIS POIS TÁ NO THEME NO primarySwatch
+            // backgroundColor: Color.fromARGB(255, 89, 4, 104),
+            actions: actions,
+          );
 
     // A altura disponível é igual a altura toda - a altura do appbar e status bar do celular
     final alturaDisponivel = mediaQuery.size.height -
         appBar.preferredSize.height -
         mediaQuery.padding.top;
 
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    // IOS dá problema, tem que botar safearea
+    final bodyPage = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -291,7 +313,8 @@ class _MyHomePageState extends State<MyHomePage> {
             //     mainAxisAlignment: MainAxisAlignment.center,
             //     children: <Widget>[
             //       Text('EXIBIR GRÁFICO'),
-            //       Switch(
+            //       // Switch que vai se adaptar pra android ou ios
+            //       Switch.adaptive(
             //           value: _showChart,
             //           onChanged: (value) {
             //             setState(() {
@@ -319,15 +342,31 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        // NÃO PRECISA MAIS POIS TÁ NO THEME NO primarySwatch
-        // backgroundColor: Colors.purple,
-        child: Icon(Icons.add),
-        onPressed: () {
-          _openTransactionFormModal(context);
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: bodyPage,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: bodyPage,
+
+            /// FLOATBUTTON não existe no IOS
+            /// Foi usado o dart:io para detectar o Platform e ver se é IOS ou Android
+            /// Se for IOS ele tira o floatbutton
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    // NÃO PRECISA MAIS POIS TÁ NO THEME NO primarySwatch
+                    // backgroundColor: Colors.purple,
+                    child: Icon(Icons.add),
+                    onPressed: () {
+                      _openTransactionFormModal(context);
+                    },
+                  ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+          );
   }
 }

@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, prefer_const_constructors, prefer_const_constructors_in_immutables, unnecessary_null_comparison
+import 'package:expenses/components/adaptative_button.dart';
+import 'package:expenses/components/adaptative_datepicker.dart';
+import 'package:expenses/components/adaptative_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
   /// Aqui é pra dizer que vamos precisar de uma função no construtor, essa função
@@ -20,7 +22,7 @@ class _TransactionFormState extends State<TransactionForm> {
   final _titleController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
-  void _submitForm() {
+  _submitForm() {
     final title = _titleController.text;
     // Vai tentar parsear o valor, se não conseguir vai meter 0
     final value = double.tryParse(_valueController.text) ?? 0.0;
@@ -30,27 +32,6 @@ class _TransactionFormState extends State<TransactionForm> {
     } else {
       widget.onSubmit(title, value, _selectedDate);
     }
-  }
-
-  _showDatePicker() async {
-    await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-      // Define a localização para português do Brasil
-      locale: Locale('pt', 'BR'),
-    ).then((value) {
-      if (value == null) {
-        return;
-      } else {
-        /// DADO ALTERADO = INTERFACE DEVERÁ REFLETIR
-        /// Componente é STATEFULL
-        setState(() {
-          _selectedDate = value;
-        });
-      }
-    });
   }
 
   @override
@@ -66,7 +47,8 @@ class _TransactionFormState extends State<TransactionForm> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
+                child: AdaptativeTextField(
+                  label: 'Título',
                   controller: _titleController,
 
                   /// Aqui é pra fazer o submit quando apertar o enter no teclado
@@ -75,17 +57,11 @@ class _TransactionFormState extends State<TransactionForm> {
                   onSubmitted: (_) {
                     _submitForm();
                   },
-                  decoration: InputDecoration(
-                    labelText: 'Título',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
+                child: AdaptativeTextField(
                   controller: _valueController,
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
 
@@ -95,57 +71,36 @@ class _TransactionFormState extends State<TransactionForm> {
                   onSubmitted: (_) {
                     _submitForm();
                   },
-                  decoration: InputDecoration(
-                    labelText: 'Valor (R\$)',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50)),
-                  ),
+                  label: 'Valor (R\$)',
                 ),
               ),
-              SizedBox(
-                height: 50,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        _selectedDate == null
-                            ? 'Nenhuma data selecionada!'
-                            // : _selectedDate.toString(),
-                            : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}',
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        _showDatePicker();
-                      },
-                      child: Text(
-                        'Selecione outra data',
-                        style: TextStyle(
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.fontSize,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
+              AdaptativeDatePicker(
+                selectedDate: _selectedDate,
+                onDateChange: (newDate) {
+                  setState(() {
+                    _selectedDate = newDate;
+                  });
+                },
               ),
               Container(
                 margin: EdgeInsets.all(10),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    _submitForm();
-                  },
-                  icon: Icon(Icons.add),
-                  label: Text('Nova Transação'),
-                  style: ElevatedButton.styleFrom(
-                      elevation: 5,
-                      backgroundColor: Colors.purple,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      minimumSize: Size(200, 50)),
+                // child: ElevatedButton.icon(
+                //   onPressed: () {
+                //     _submitForm();
+                //   },
+                //   icon: Icon(Icons.add),
+                //   label: Text('Nova Transação'),
+                //   style: ElevatedButton.styleFrom(
+                //       elevation: 5,
+                //       backgroundColor: Colors.purple,
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(50),
+                //       ),
+                //       minimumSize: Size(200, 50)),
+                // ),
+                child: AdaptativeButton(
+                  label: "Nova Transação",
+                  onPressed: _submitForm(),
                 ),
               )
             ],
