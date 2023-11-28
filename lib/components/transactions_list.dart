@@ -3,7 +3,6 @@
 import 'package:expenses/components/transaction_item.dart';
 import 'package:expenses/models/transaction.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
@@ -66,8 +65,12 @@ class TransactionList extends StatelessWidget {
             /// O BUILDER VAI CHAMAR DE POUCO EM POUCO, CONFORME FOR FAZENDO SCROLLS
             itemCount: transactions.length,
             itemBuilder: ((context, index) {
-              final e = transactions[index];
-              return TransactionItem(e: e, onRemove: onRemove);
+              final tr = transactions[index];
+              return TransactionItem(
+                key: ValueKey(tr.id),
+                tr: tr,
+                onRemove: onRemove,
+              );
               /**
                * NÃO VAI MAIS SER USADO O CARD!!!!!!!!!!1
                * MAS SE QUISER USAR CARD FICA AÍ DE EXEMPLO

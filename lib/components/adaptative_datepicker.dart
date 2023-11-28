@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +22,7 @@ class AdaptativeDatePicker extends StatelessWidget {
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
       // Define a localização para português do Brasil
-      locale: Locale('pt', 'BR'),
+      locale: const Locale('pt', 'BR'),
     ).then((value) {
       if (value == null) {
         return;
@@ -33,7 +35,7 @@ class AdaptativeDatePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Platform.isIOS
-        ? Container(
+        ? SizedBox(
             height: 180,
             child: CupertinoDatePicker(
               mode: CupertinoDatePickerMode.date,

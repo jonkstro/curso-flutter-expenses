@@ -5,18 +5,18 @@ import 'package:intl/intl.dart';
 class TransactionItem extends StatelessWidget {
   const TransactionItem({
     super.key,
-    required this.e,
+    required this.tr,
     required this.onRemove,
   });
 
-  final Transaction e;
+  final Transaction tr;
   final void Function(String p1) onRemove;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       child: ListTile(
         leading: CircleAvatar(
           radius: 30,
@@ -28,7 +28,7 @@ class TransactionItem extends StatelessWidget {
              */
             child: FittedBox(
               child: Text(
-                'R\$${e.value.toStringAsFixed(2)}',
+                'R\$${tr.value.toStringAsFixed(2)}',
                 style: TextStyle(
                   fontSize:
                       Theme.of(context).textTheme.headlineMedium?.fontSize,
@@ -41,14 +41,14 @@ class TransactionItem extends StatelessWidget {
           ),
         ),
         title: Text(
-          e.title,
+          tr.title,
           style: TextStyle(
             fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
             fontWeight: Theme.of(context).textTheme.bodyMedium?.fontWeight,
           ),
         ),
         subtitle: Text(
-          DateFormat('dd MMMM yyyy', 'PT_BR').format(e.date),
+          DateFormat('dd MMMM yyyy', 'PT_BR').format(tr.date),
           style: TextStyle(
             fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
             color: Theme.of(context).textTheme.bodySmall?.color,
@@ -59,9 +59,9 @@ class TransactionItem extends StatelessWidget {
         trailing: MediaQuery.of(context).size.width < 400
             ? IconButton(
                 onPressed: () {
-                  onRemove(e.id);
+                  onRemove(tr.id);
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.delete,
                   color: Colors.red,
                 ),
@@ -73,7 +73,7 @@ class TransactionItem extends StatelessWidget {
                   shadowColor: Colors.transparent,
                 ),
                 onPressed: () {},
-                icon: Icon(
+                icon: const Icon(
                   Icons.delete,
                   color: Colors.red,
                 ),
