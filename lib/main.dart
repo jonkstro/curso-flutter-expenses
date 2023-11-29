@@ -94,78 +94,78 @@ class _MyHomePageState extends State<MyHomePage> {
   /// Aqui vamos criar alguns objetos pra adicionar depois
   // ignore: unused_field
   final List<Transaction> _transactions = [
-    Transaction(
-      id: 't1',
-      title: 'Conta antiga',
-      value: 400.76,
-      date: DateTime.now().subtract(Duration(days: 33)),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de luz',
-      value: 211,
-      date: DateTime.now().subtract(Duration(days: 2)),
-    ),
-    Transaction(
-      id: 't3',
-      title: 'Conta de água',
-      value: 200,
-      date: DateTime.now().subtract(Duration(days: 0)),
-    ),
-    Transaction(
-      id: 't1',
-      title: 'Conta antiga',
-      value: 400.76,
-      date: DateTime.now().subtract(Duration(days: 33)),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de luz',
-      value: 211,
-      date: DateTime.now().subtract(Duration(days: 2)),
-    ),
-    Transaction(
-      id: 't3',
-      title: 'Conta de água',
-      value: 200,
-      date: DateTime.now().subtract(Duration(days: 0)),
-    ),
-    Transaction(
-      id: 't1',
-      title: 'Conta antiga',
-      value: 400.76,
-      date: DateTime.now().subtract(Duration(days: 33)),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de luz',
-      value: 211,
-      date: DateTime.now().subtract(Duration(days: 2)),
-    ),
-    Transaction(
-      id: 't3',
-      title: 'Conta de água',
-      value: 200,
-      date: DateTime.now().subtract(Duration(days: 0)),
-    ),
-    Transaction(
-      id: 't1',
-      title: 'Conta antiga',
-      value: 400.76,
-      date: DateTime.now().subtract(Duration(days: 33)),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de luz',
-      value: 211,
-      date: DateTime.now().subtract(Duration(days: 2)),
-    ),
-    Transaction(
-      id: 't3',
-      title: 'ultima Conta de água',
-      value: 200,
-      date: DateTime.now().subtract(Duration(days: 0)),
-    ),
+    // Transaction(
+    //   id: 't1',
+    //   title: 'Conta antiga',
+    //   value: 400.76,
+    //   date: DateTime.now().subtract(Duration(days: 33)),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Conta de luz',
+    //   value: 211,
+    //   date: DateTime.now().subtract(Duration(days: 2)),
+    // ),
+    // Transaction(
+    //   id: 't3',
+    //   title: 'Conta de água',
+    //   value: 200,
+    //   date: DateTime.now().subtract(Duration(days: 0)),
+    // ),
+    // Transaction(
+    //   id: 't1',
+    //   title: 'Conta antiga',
+    //   value: 400.76,
+    //   date: DateTime.now().subtract(Duration(days: 33)),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Conta de luz',
+    //   value: 211,
+    //   date: DateTime.now().subtract(Duration(days: 2)),
+    // ),
+    // Transaction(
+    //   id: 't3',
+    //   title: 'Conta de água',
+    //   value: 200,
+    //   date: DateTime.now().subtract(Duration(days: 0)),
+    // ),
+    // Transaction(
+    //   id: 't1',
+    //   title: 'Conta antiga',
+    //   value: 400.76,
+    //   date: DateTime.now().subtract(Duration(days: 33)),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Conta de luz',
+    //   value: 211,
+    //   date: DateTime.now().subtract(Duration(days: 2)),
+    // ),
+    // Transaction(
+    //   id: 't3',
+    //   title: 'Conta de água',
+    //   value: 200,
+    //   date: DateTime.now().subtract(Duration(days: 0)),
+    // ),
+    // Transaction(
+    //   id: 't1',
+    //   title: 'Conta antiga',
+    //   value: 400.76,
+    //   date: DateTime.now().subtract(Duration(days: 33)),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Conta de luz',
+    //   value: 211,
+    //   date: DateTime.now().subtract(Duration(days: 2)),
+    // ),
+    // Transaction(
+    //   id: 't3',
+    //   title: 'ultima Conta de água',
+    //   value: 200,
+    //   date: DateTime.now().subtract(Duration(days: 0)),
+    // ),
   ];
 
   // Mostrar o gráfico ou não

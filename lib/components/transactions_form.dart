@@ -99,9 +99,10 @@ class _TransactionFormState extends State<TransactionForm> {
                 //       minimumSize: Size(200, 50)),
                 // ),
                 child: AdaptativeButton(
-                  label: "Nova Transação",
-                  onPressed: _submitForm(),
-                ),
+                    label: "Nova Transação",
+                    onPressed: () {
+                      _submitForm();
+                    }),
               )
             ],
           ),
