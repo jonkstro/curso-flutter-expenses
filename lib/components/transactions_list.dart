@@ -67,7 +67,9 @@ class TransactionList extends StatelessWidget {
             itemBuilder: ((context, index) {
               final tr = transactions[index];
               return TransactionItem(
-                key: Key(tr.id),
+                /// QUALQUER OUTRA CHAVE VAI DAR ERRO, POR ISSO FOI USADA ESSA
+                /// POIS SE APAGAR ELA MUDA AS CORES PRA COR ERRADA
+                key: GlobalObjectKey(tr.id),
                 tr: tr,
                 onRemove: onRemove,
               );

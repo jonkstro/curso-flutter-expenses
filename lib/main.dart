@@ -43,6 +43,10 @@ class ExpenssesApp extends StatelessWidget {
       home: MyHomePage(),
       // DEFINIR OS TEMAS DO APLICATIVO:
       theme: tema.copyWith(
+        useMaterial3: true,
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Colors.purple,
+        ),
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.purple,
           secondary: Colors.amber,
@@ -234,11 +238,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _getIconButton(IconData icon, Function() fn) {
     return Platform.isIOS
         ? GestureDetector(
-            child: Icon(icon),
             onTap: fn,
+            child: Icon(
+              icon,
+              color: Colors.white,
+            ),
           )
         : IconButton(
-            icon: Icon(icon),
+            icon: Icon(
+              icon,
+              color: Colors.white,
+            ),
             onPressed: fn,
           );
   }
@@ -294,6 +304,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // NÃO PRECISA MAIS POIS TÁ NO THEME NO primarySwatch
             // backgroundColor: Color.fromARGB(255, 89, 4, 104),
             actions: actions,
+            backgroundColor: Theme.of(context).colorScheme.primary,
           );
 
     // A altura disponível é igual a altura toda - a altura do appbar e status bar do celular
